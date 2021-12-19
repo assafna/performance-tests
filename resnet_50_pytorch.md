@@ -43,7 +43,7 @@ docker build --network=host . -t nvidia_resnet50_pt
 ```
 3. Run the container.
 ```
-docker run --rm -it -v <path to imagenet>:/imagenet --ipc=host nvidia_resnet50_pt
+docker run --rm -it --name=nvidia_resnet50_pt -v <path to imagenet>:/imagenet --ipc=host nvidia_resnet50_pt
 ```
 `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
 
