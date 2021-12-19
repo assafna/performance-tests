@@ -69,7 +69,7 @@ To benchmark training, run:
 * For multiple GPUs
     * FP32 (V100 GPUs only)
 
-        `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision FP32 --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
+        `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision FP32 --mode benchmark_training --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
     * TF32 (A100 GPUs only)
 
         `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision TF32 --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
