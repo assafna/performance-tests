@@ -66,7 +66,7 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
 ### Training
 
-#### Directly
+#### **Directly**
 
 Single and multi-GPU.
 
@@ -74,7 +74,7 @@ Single and multi-GPU.
 python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_training --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
 ```
 
-#### Slurm
+#### **Slurm**
 
 Running from the login server requires to convert the Docker container into a squash file. This can be done using [Enroot](https://github.com/NVIDIA/enroot) by running:
 
@@ -104,7 +104,10 @@ Multi-GPU and multi-node:
 Due to issues with NVIDIA's code, this section is based on PyTorch [code](https://github.com/pytorch/examples/tree/master/imagenet).
 
 1. Clone this repository as described above.
-2. Clone PyTorch repository:
+
+2. By default it will run for 8 nodes where each have 8 GPUs. Edit `slurm_multi_gpu.sub` as needed.
+
+3. Clone PyTorch repository:
 
     ```bash
     git clone https://github.com/pytorch/examples
@@ -112,8 +115,6 @@ Due to issues with NVIDIA's code, this section is based on PyTorch [code](https:
     ```
 
     `<path to pytorch code>`  is the directory in which the `main.py` file is placed.
-
-3. By default it will run for 8 nodes where each have 8 GPUs. Edit `slurm_multi_gpu.sub` as needed.
 
 4. Submit a job for training:
 
