@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH -J nvidia_resnet50_pt_multi_gpu
+#SBATCH --nodes 2
+#SBATCH --gres gpu:8
+
+master_addr=${SLURMD_NODENAME}
+master_port=23451
+world_size=${SLURM_JOB_NUM_NODES}
+batch_size=512
+workers=16
+
+srun --container-image $1 \
+ --container-mounts $2:/script,$3:/imagenet \
+ --no-container-entrypoint \
+ sh -c \
+ "python /script/main.py \
+ -a resnet50 \
+ --dist-url 'tcp://${master_addr}:${master_port}' \
+ --print-freq 1 \
+ --batch-size ${batch_size} \
+ --epochs 1 \
+ --dist-backend 'nccl' \
+ --multiprocessing-distributed \
+ --world-size ${world_size} \
+ --workers ${workers} \
+ --rank \${SLURM_NODEID} \
+ /imagenet"

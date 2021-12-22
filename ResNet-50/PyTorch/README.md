@@ -43,11 +43,11 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
 ### Build and run a container
 
-1. Clone the repository.
+1. Clone the repository:
 
     ```bash
     git clone https://github.com/NVIDIA/DeepLearningExamples
-    cd DeepLearningExamples/PyTorch/Classification/ConvNets
+    cd ./DeepLearningExamples/PyTorch/Classification/ConvNets
     ```
 
 2. Build the ResNet-50 PyTorch NGC container.
@@ -64,9 +64,9 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
     `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
 
-### Benchmarking
+### Training
 
-#### Training
+#### Directly
 
 Single and multi-GPU.
 
@@ -74,7 +74,54 @@ Single and multi-GPU.
 python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_training --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
 ```
 
-#### Inferencing
+#### Slurm
+
+Running from the login server requires to convert the Docker container into a squash file. This can be done using [Enroot](https://github.com/NVIDIA/enroot) by running:
+
+```bash
+enroot import dockerd://nvidia_resnet50_pt:latest
+```
+
+A `.sqsh` file will be created locally.
+
+Single GPU:
+
+1. Clone this repository:
+
+    ```bash
+    git clone https://gitlab.com/anahum/performance_tests
+    cd ./ResNet-50/PyTorch
+    ```
+
+2. Submit a job for training:
+
+    ```bash
+    sbatch slurm_single_gpu.sub <path to .sqsh file> <path to resnet> <TF32|FP32|AMP> <DGX1V|DGX2V|DGXA100>
+    ```
+
+Multi-GPU and multi-node:
+
+Due to issues with NVIDIA's code, this section is based on PyTorch [code](https://github.com/pytorch/examples/tree/master/imagenet).
+
+1. Clone this repository as described above.
+2. Clone PyTorch repository:
+
+    ```bash
+    git clone https://github.com/pytorch/examples
+    cd ./imagenet
+    ```
+
+    `<path to pytorch code>`  is the directory in which the `main.py` file is placed.
+
+3. By default it will run for 8 nodes where each have 8 GPUs. Edit `slurm_multi_gpu.sub` as needed.
+
+4. Submit a job for training:
+
+    ```bash
+    sbatch slurm_multi_gpu.sub <path to .sqsh file> <path to pytorch code> <path to resnet>
+    ```
+
+### Inferencing
 
 Single GPU only.
 
@@ -82,6 +129,6 @@ Single GPU only.
 python ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_inference --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
 ```
 
-#### Expected results
+### Expected results
 
 Available [here](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5#results).
