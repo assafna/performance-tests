@@ -33,72 +33,32 @@ wget -qO- https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/
 
 ### 2. Build and run a container.
 1. Clone the repository.
-```
+```bash
 git clone https://github.com/NVIDIA/DeepLearningExamples
 cd DeepLearningExamples/PyTorch/Classification/ConvNets
 ```
 2. Build the ResNet-50 PyTorch NGC container.
-```
+```bash
 docker build --network=host . -t nvidia_resnet50_pt
 ```
 3. Run the container.
-```
+```bash
 docker run --rm -it --name=nvidia_resnet50_pt -v <path to imagenet>:/imagenet --ipc=host nvidia_resnet50_pt
 ```
 `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
 
 ### 3. Benchmarking
-Each of the following scripts will run 100 iterations and save results in the `benchmark.json` file.
 #### Training
-To benchmark training, run:
-
-* For 1 GPU
-    * FP32 (V100 GPUs only)
-
-        `python ./launch.py --model resnet50 --precision FP32 --mode benchmark_training --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-    * TF32 (A100 GPUs only)
-
-        `python ./launch.py --model resnet50 --precision TF32 --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-    * AMP
-        * DGX1V
-
-            `python ./launch.py --model resnet50 --precision AMP --mode benchmark_training --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-        * DGX A100
-
-            `python ./launch.py --model resnet50 --precision AMP --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-* For multiple GPUs
-    * FP32 (V100 GPUs only)
-
-        `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision FP32 --mode benchmark_training --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-    * TF32 (A100 GPUs only)
-
-        `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision TF32 --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-    * AMP
-        * DGX1V
-
-            `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision AMP --mode benchmark_training --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-        * DGX A100
-
-            `python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision AMP --mode benchmark_training --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
+Single and multi-GPU.
+```bash
+python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_training --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
+```
 
 #### Inferencing
-To benchmark inference (single GPU only), run:
-
-* FP32 (V100 GPU only)
-
-    `python ./launch.py --model resnet50 --precision FP32 --mode benchmark_inference --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-
-* TF32 (A100 GPU only)
-
-    `python ./launch.py --model resnet50 --precision TF32 --mode benchmark_inference --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-
-* AMP
-    * DGX1V
-
-        `python ./launch.py --model resnet50 --precision AMP --mode benchmark_inference --platform DGX1V /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
-    * DGX A100
-
-        `python ./launch.py --model resnet50 --precision AMP --mode benchmark_inference --platform DGXA100 /imagenet --raport-file benchmark.json --epochs 1 --prof 100`
+Single GPU only.
+```bash
+python ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_inference --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
+```
 
 #### Expected results
 Available [here](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5#results).
