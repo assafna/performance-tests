@@ -64,17 +64,15 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
     `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
 
-### Training
-
-#### **Directly**
+### Single machine
 
 Single and multi-GPU.
 
 ```bash
-python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_training --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
+python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode <benchmark_training|benchmark_inference> --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
 ```
 
-#### **Slurm**
+### Cluster of machines (Slurm)
 
 Running from the login server requires to convert the Docker container into a squash file. This can be done using [Enroot](https://github.com/NVIDIA/enroot) by running:
 
@@ -93,10 +91,10 @@ Single GPU:
     cd ./ResNet-50/PyTorch
     ```
 
-2. Submit a job for training:
+2. Submit a job:
 
     ```bash
-    sbatch slurm_single_gpu.sub <path to .sqsh file> <path to resnet> <TF32|FP32|AMP> <DGX1V|DGX2V|DGXA100>
+    sbatch slurm_single_gpu.sub <path to .sqsh file> <path to resnet> <TF32|FP32|AMP> <benchmark_training|benchmark_inference> <DGX1V|DGX2V|DGXA100>
     ```
 
 Multi-GPU and multi-node:
@@ -121,14 +119,6 @@ Due to issues with NVIDIA's code, this section is based on PyTorch [code](https:
     ```bash
     sbatch slurm_multi_gpu.sub <path to .sqsh file> <path to pytorch code> <path to resnet>
     ```
-
-### Inferencing
-
-Single GPU only.
-
-```bash
-python ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode benchmark_inference --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
-```
 
 ### Expected results
 
