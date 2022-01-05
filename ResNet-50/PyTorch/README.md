@@ -188,51 +188,44 @@ enroot import dockerd://nvidia_resnet50_pt:latest
 
 A `.sqsh` file will be created locally.
 
-#### Single GPU
+Clone this repository:
 
-1. Clone this repository:
+```bash
+git clone https://gitlab.com/anahum/performance_tests
+cd ./performance_tests/ResNet-50/PyTorch/Slurm
+```
 
-    ```bash
-    git clone https://gitlab.com/anahum/performance_tests
-    cd ./performance_tests/ResNet-50/PyTorch
-    ```
+#### NVIDIA DeepLearningExamples
 
-2. Submit a job:
+Single node:
 
-    ```bash
-    sbatch slurm_single_gpu.sub \
-    <path to .sqsh file> \
-    <path to resnet> \
-    <TF32|FP32|AMP> \
-    <benchmark_training|benchmark_inference> \
-    <DGX1V|DGX2V|DGXA100>
-    ```
+```bash
+sbatch \
+--gres gpu:<number of GPUs> \
+./DeepLearningExamples/single_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<number of GPUs> \
+<TF32|FP32|AMP> \
+<benchmark_training|benchmark_inference> \
+<DGX1V|DGX2V|DGXA100>
+```
 
-#### Multi-GPU and multi-node
+Multi-node:
 
-Due to issues with NVIDIA's code, this section is based on PyTorch [code](https://github.com/pytorch/examples/tree/master/imagenet).
-
-1. Clone this repository as described above.
-
-2. By default it will run for 8 nodes where each have 8 GPUs. Edit `slurm_multi_gpu.sub` as needed.
-
-3. Clone PyTorch repository:
-
-    ```bash
-    git clone https://github.com/pytorch/examples
-    cd ./examples/imagenet
-    ```
-
-    `<path to pytorch code>`  is the directory in which the `main.py` file is placed.
-
-4. Submit a job for training:
-
-    ```bash
-    sbatch slurm_multi_gpu.sub \
-    <path to .sqsh file> \
-    <path to pytorch code> \
-    <path to resnet>
-    ```
+```bash
+sbatch \
+--nodes <number of nodes> \
+--gres gpu:<number of GPUs> \
+./DeepLearningExamples/multi_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<number of GPUs> \
+<a free port> \
+<TF32|FP32|AMP> \
+<benchmark_training|benchmark_inference> \
+<DGX1V|DGX2V|DGXA100>
+```
 
 ### Expected results
 

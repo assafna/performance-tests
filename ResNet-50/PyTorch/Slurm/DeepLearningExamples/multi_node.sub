@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name resnet50
+
+srun --container-image $1 \
+ --container-mounts $2:/imagenet \
+ --no-container-entrypoint \
+ sh -c \
+ "python ./multiproc.py \
+ --nnodes $3 \
+ --node_rank \${SLURM_NODEID} \
+ --nproc_per_node $4 \
+ --master_addr \${SLURM_SUBMIT_HOST} \
+ --master_port $5 \
+ ./launch.py \
+ --model resnet50 \
+ --precision $6 \
+ --mode $7 \
+ --platform $8 \
+ /imagenet \
+ --raport-file benchmark.json \
+ --epochs 1 \
+ --prof 100"
