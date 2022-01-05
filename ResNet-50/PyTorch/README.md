@@ -64,15 +64,121 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
     `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
 
-### Single machine
+### [NVIDIA DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5)
 
-Single and multi-GPU.
+When running multi-node `<node index>` should be set to `0` for the "master" node and increased for any additional node (i.e., 1, 2, 3...).
+
+#### Single node
 
 ```bash
-python ./multiproc.py --nproc_per_node <number of GPUs> ./launch.py --model resnet50 --precision <TF32|FP32|AMP> --mode <benchmark_training|benchmark_inference> --platform <DGX1V|DGX2V|DGXA100> /imagenet --raport-file benchmark.json --epochs 1 --prof 100
+python ./multiproc.py \
+--nproc_per_node <number of GPUs> \
+./launch.py \
+--model resnet50 \
+--precision <TF32|FP32|AMP> \
+--mode <benchmark_training|benchmark_inference> \
+--platform <DGX1V|DGX2V|DGXA100> \
+/imagenet \
+--raport-file benchmark.json \
+--epochs 1 \
+--prof 100
 ```
 
-### Cluster of machines (Slurm)
+#### Multi-node
+
+Run on each node:
+
+```bash
+python ./multiproc.py \
+--nnodes <number of nodes> \
+--node_rank <node index> \
+--nproc_per_node <number of GPUs> \
+--master_addr <master node address> \
+--master_port <a free port> \
+./launch.py \
+--model resnet50 \
+--precision <TF32|FP32|AMP> \
+--mode <benchmark_training|benchmark_inference> \
+--platform <DGX1V|DGX2V|DGXA100> \
+/imagenet \
+--raport-file benchmark.json \
+--epochs 1 \
+--prof 100
+```
+
+### [NVIDIA Apex](https://github.com/NVIDIA/apex/tree/master/examples/imagenet) (mixed precision, DDP)
+
+Clone the repository:
+
+```bash
+git clone https://github.com/NVIDIA/apex
+cd ./apex/examples/imagenet
+```
+
+#### Single node
+
+```bash
+python -m torch.distributed.launch \
+--nproc_per_node <number of GPUs> \
+main_amp.py -a resnet50 \
+--opt-level O1 \
+/imagenet
+```
+
+#### Multi-node
+
+Run on each node:
+
+```bash
+python -m torch.distributed.launch \
+--nproc_per_node <number of GPUs> \
+--nnodes <number of nodes> \
+--node_rank <node index> \
+--master_addr <master node address> \
+--master_port <a free port> \
+main_amp.py -a resnet50 \
+--opt-level O1 \
+/imagenet
+```
+
+### [PyTorch example](https://github.com/pytorch/examples/tree/master/imagenet) (DDP)
+
+Clone the repository:
+
+```bash
+git clone https://github.com/pytorch/examples
+cd ./examples/imagenet
+```
+
+#### Single node
+
+```bash
+python ./main.py \
+-a resnet50 \
+--dist-url 'tcp://127.0.0.1:<a free port>' \
+--dist-backend 'nccl' \
+--multiprocessing-distributed \
+--world-size 1 \
+--rank 0 \
+/imagenet
+```
+
+#### Multi-node
+
+Run on each node:
+
+```bash
+python ./main.py \
+-a resnet50 \
+--dist-url 'tcp://<master node address>:<a free port>' \
+--dist-backend 'nccl' \
+--multiprocessing-distributed \
+--world-size <number of nodes> \
+--rank <node index> \
+/imagenet
+```
+
+### Slurm
 
 Running from the login server requires to convert the Docker container into a squash file. This can be done using [Enroot](https://github.com/NVIDIA/enroot) by running:
 
@@ -82,22 +188,27 @@ enroot import dockerd://nvidia_resnet50_pt:latest
 
 A `.sqsh` file will be created locally.
 
-Single GPU:
+#### Single GPU
 
 1. Clone this repository:
 
     ```bash
     git clone https://gitlab.com/anahum/performance_tests
-    cd ./ResNet-50/PyTorch
+    cd ./performance_tests/ResNet-50/PyTorch
     ```
 
 2. Submit a job:
 
     ```bash
-    sbatch slurm_single_gpu.sub <path to .sqsh file> <path to resnet> <TF32|FP32|AMP> <benchmark_training|benchmark_inference> <DGX1V|DGX2V|DGXA100>
+    sbatch slurm_single_gpu.sub \
+    <path to .sqsh file> \
+    <path to resnet> \
+    <TF32|FP32|AMP> \
+    <benchmark_training|benchmark_inference> \
+    <DGX1V|DGX2V|DGXA100>
     ```
 
-Multi-GPU and multi-node:
+#### Multi-GPU and multi-node
 
 Due to issues with NVIDIA's code, this section is based on PyTorch [code](https://github.com/pytorch/examples/tree/master/imagenet).
 
@@ -109,7 +220,7 @@ Due to issues with NVIDIA's code, this section is based on PyTorch [code](https:
 
     ```bash
     git clone https://github.com/pytorch/examples
-    cd ./imagenet
+    cd ./examples/imagenet
     ```
 
     `<path to pytorch code>`  is the directory in which the `main.py` file is placed.
@@ -117,7 +228,10 @@ Due to issues with NVIDIA's code, this section is based on PyTorch [code](https:
 4. Submit a job for training:
 
     ```bash
-    sbatch slurm_multi_gpu.sub <path to .sqsh file> <path to pytorch code> <path to resnet>
+    sbatch slurm_multi_gpu.sub \
+    <path to .sqsh file> \
+    <path to pytorch code> \
+    <path to resnet>
     ```
 
 ### Expected results
