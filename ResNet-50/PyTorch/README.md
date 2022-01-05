@@ -92,7 +92,7 @@ Run on each node:
 python ./multiproc.py \
 --nnodes <number of nodes> \
 --node_rank <node index> \
---nproc_per_node <number of GPUs> \
+--nproc_per_node <number of GPUs per node> \
 --master_addr <master node address> \
 --master_port <a free port> \
 ./launch.py \
@@ -108,19 +108,12 @@ python ./multiproc.py \
 
 ### [NVIDIA Apex](https://github.com/NVIDIA/apex/tree/master/examples/imagenet) (mixed precision, DDP)
 
-Clone the repository:
-
-```bash
-git clone https://github.com/NVIDIA/apex
-cd ./apex/examples/imagenet
-```
-
 #### Single node
 
 ```bash
 python -m torch.distributed.launch \
 --nproc_per_node <number of GPUs> \
-main_amp.py -a resnet50 \
+./examples/apex/examples/imagenet/main_amp.py -a resnet50 \
 --opt-level O1 \
 /imagenet
 ```
@@ -131,12 +124,12 @@ Run on each node:
 
 ```bash
 python -m torch.distributed.launch \
---nproc_per_node <number of GPUs> \
 --nnodes <number of nodes> \
 --node_rank <node index> \
+--nproc_per_node <number of GPUs per node> \
 --master_addr <master node address> \
 --master_port <a free port> \
-main_amp.py -a resnet50 \
+./examples/apex/examples/imagenet/ -a resnet50 \
 --opt-level O1 \
 /imagenet
 ```
@@ -216,15 +209,45 @@ Multi-node:
 ```bash
 sbatch \
 --nodes <number of nodes> \
---gres gpu:<number of GPUs> \
+--gres gpu:<number of GPUs per node> \
 ./DeepLearningExamples/multi_node.sub \
 <path to .sqsh file> \
 <path to resnet> \
-<number of GPUs> \
+<number of nodes> \
+<number of GPUs per node> \
 <a free port> \
 <TF32|FP32|AMP> \
 <benchmark_training|benchmark_inference> \
 <DGX1V|DGX2V|DGXA100>
+```
+
+#### NVIDIA Apex (mixed precision, DDP)
+
+Modify the `.sub.` files to change parameters such as the optimization level.
+
+Single node:
+
+```bash
+sbatch \
+--gres gpu:<number of GPUs> \
+./Apex/single_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<number of GPUs>
+```
+
+Multi-node:
+
+```bash
+sbatch \
+--nodes <number of nodes> \
+--gres gpu:<number of GPUs per node> \
+./Apex/multi_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<number of nodes> \
+<number of GPUs per node> \
+<a free port>
 ```
 
 ### Expected results
