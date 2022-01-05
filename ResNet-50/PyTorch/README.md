@@ -276,6 +276,7 @@ Multi node:
 
 ```bash
 sbatch \
+--nodes <number of nodes> \
 --gres gpu:<number of GPUs per node> \
 ./PyTorch/multi_node.sub \
 <path to .sqsh file> \
