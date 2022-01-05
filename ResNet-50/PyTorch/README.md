@@ -2,7 +2,7 @@
 
 ## Notes
 
-This repository is a short summary of the Deep Learning Examples [repository](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5) for running ResNet-50 on PyTorch. Additional information and instructions are available there.
+This repository is a short summary of the Deep Learning Examples [repository](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5) for running ResNet-50 on PyTorch. Expected results are available [here](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5#results).
 
 ## Model overview
 
@@ -250,6 +250,37 @@ sbatch \
 <a free port>
 ```
 
-### Expected results
+#### PyTorch example (DDP)
 
-Available [here](https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Classification/ConvNets/resnet50v1.5#results).
+Clone the repository:
+
+```bash
+git clone https://github.com/pytorch/examples
+```
+
+`<path to pytorch>` will refer to this repository path.
+
+Single node:
+
+```bash
+sbatch \
+--gres gpu:<number of GPUs> \
+./PyTorch/single_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<path to pytorch> \
+<a free port>
+```
+
+Multi node:
+
+```bash
+sbatch \
+--gres gpu:<number of GPUs per node> \
+./PyTorch/multi_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<path to pytorch> \
+<a free port> \
+<number of nodes>
+```

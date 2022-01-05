@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --job-name resnet50
+
+srun --container-image $1 \
+ --container-mounts $2:/imagenet,$3:/pytorch \
+ --no-container-entrypoint \
+ sh -c \
+ "python /pytorch/examples/imagenet/main.py \
+ -a resnet50 \
+ --dist-url 'tcp://\${SLURM_SUBMIT_HOST}:$4' \
+ --dist-backend 'nccl' \
+ --multiprocessing-distributed \
+ --world-size $5 \
+ --rank \${SLURM_NODEID} \
+ /imagenet"
