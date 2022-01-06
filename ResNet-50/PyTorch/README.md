@@ -68,7 +68,7 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 
 When running multi-node `<node index>` should be set to `0` for the "master" node and increased for any additional node (i.e., 1, 2, 3...).
 
-#### Single node
+__Single node:__
 
 ```bash
 python ./multiproc.py \
@@ -84,7 +84,7 @@ python ./multiproc.py \
 --prof 100
 ```
 
-#### Multi-node
+__Multi-node:__
 
 Run on each node:
 
@@ -108,7 +108,7 @@ python ./multiproc.py \
 
 ### [NVIDIA Apex](https://github.com/NVIDIA/apex/tree/master/examples/imagenet) (mixed precision, DDP)
 
-#### Single node
+__Single node:__
 
 ```bash
 python -m torch.distributed.launch \
@@ -118,7 +118,7 @@ python -m torch.distributed.launch \
 /imagenet
 ```
 
-#### Multi-node
+__Multi-node:__
 
 Run on each node:
 
@@ -143,7 +143,7 @@ git clone https://github.com/pytorch/examples
 cd ./examples/imagenet
 ```
 
-#### Single node
+__Single node:__
 
 ```bash
 python ./main.py \
@@ -156,7 +156,7 @@ python ./main.py \
 /imagenet
 ```
 
-#### Multi-node
+__Multi-node:__
 
 Run on each node:
 
@@ -190,7 +190,7 @@ cd ./performance_tests/ResNet-50/PyTorch/Slurm
 
 #### NVIDIA DeepLearningExamples
 
-Single node:
+__Single node:__
 
 ```bash
 sbatch \
@@ -204,7 +204,7 @@ sbatch \
 <DGX1V|DGX2V|DGXA100>
 ```
 
-Multi-node:
+__Multi-node:__
 
 ```bash
 sbatch \
@@ -225,7 +225,7 @@ sbatch \
 
 Modify the `.sub.` files to change parameters such as the optimization level.
 
-Single node:
+__Single node:__
 
 ```bash
 sbatch \
@@ -236,7 +236,7 @@ sbatch \
 <number of GPUs>
 ```
 
-Multi-node:
+__Multi-node:__
 
 ```bash
 sbatch \
@@ -260,7 +260,7 @@ git clone https://github.com/pytorch/examples
 
 `<path to pytorch>` will refer to this repository path.
 
-Single node:
+__Single node:__
 
 ```bash
 sbatch \
@@ -272,7 +272,7 @@ sbatch \
 <a free port>
 ```
 
-Multi node:
+__Multi-node:__
 
 ```bash
 sbatch \
