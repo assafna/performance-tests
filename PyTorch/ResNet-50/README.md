@@ -24,7 +24,11 @@ The model is initialized as described in [Delving deep into rectifiers: Surpassi
 ### Download and preprocess the dataset
 
 1. Sign-up or login to [ImageNet](https://image-net.org/).
-2. Download the [ILSVRC2012 images dataset](https://image-net.org/challenges/LSVRC/2012/2012-downloads.php) - Training images (Task 1 & 2) & Validation images (all tasks).
+2. Download the [ILSVRC2012 images dataset](https://image-net.org/challenges/LSVRC/2012/2012-downloads.php):
+
+    * Training images (Task 1 & 2).
+    * Validation images (all tasks).
+
 3. Extract the training data:
 
     ```bash
