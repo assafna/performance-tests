@@ -76,5 +76,36 @@ This repository is a short summary of the Deep Learning Examples [repository](ht
     * Run the script:
 
         ```bash
-        ./dataprep/preprocess_imagenet.sh /imagenet
+        mkdir /imagenet/result && ./dataprep/preprocess_imagenet.sh /imagenet
         ```
+
+7. Optional: Create DALI index files:
+
+```bash
+bash ./utils/dali_index.sh /imagenet/result /imagenet/dali_idx
+```
+
+### [NVIDIA DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master/TensorFlow/Classification/ConvNets/resnet50v1.5)
+
+When running multi-node `<node index>` should be set to `0` for the "master" node and increased for any additional node (i.e., 1, 2, 3...).
+
+Optional arguments to be added:
+
+* `--amp` - Automated Mixed Precision.
+* `--xla` - Accelerated Linear Algebra.
+* `--dali` - DALI, together with `--data_idx_dir`.
+
+Additional parameters can be found [here](https://github.com/NVIDIA/DeepLearningExamples/tree/master/TensorFlow/Classification/ConvNets/resnet50v1.5#parameters).
+
+__Single node:__
+
+```bash
+mpiexec --allow-run-as-root \
+--bind-to socket \
+-np <number of GPUs> \
+python ./main.py \
+--mode <training_benchmark|inference_benchmark> \
+--batch_size 256 \
+--data_dir /imagenet/result \
+--results_dir /results
+```
