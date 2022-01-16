@@ -68,7 +68,7 @@ This repository is a short summary of the Deep Learning Examples [repository](ht
     * Run the TensorFlow container:
 
         ```bash
-        docker run --rm -it --name=convert_to_tfrecords -v <path to imagenet>:/imagenet --ipc=host nvidia_resnet50_tf
+        docker run --rm -it --name=rn50_tf -v <path to imagenet>:/imagenet --ipc=host nvidia_resnet50_tf
         ```
 
         `<path to imagenet>`  is the directory in which the `train/` and `val/` directories are placed.
@@ -108,4 +108,53 @@ python ./main.py \
 --batch_size 256 \
 --data_dir /imagenet/result \
 --results_dir /results
+```
+
+__Multi-node:__
+
+Not yet was able to run.
+
+### Slurm
+
+Running from the login server requires to convert the Docker container into a squash file. This can be done using [Enroot](https://github.com/NVIDIA/enroot) by running:
+
+```bash
+enroot import dockerd://nvidia_resnet50_tf:latest
+```
+
+A `.sqsh` file will be created locally.
+
+Clone this repository:
+
+```bash
+git clone https://gitlab.com/anahum/performance_tests
+cd ./performance_tests/TensorFlow/ResNet-50/Slurm
+```
+
+#### NVIDIA DeepLearningExamples
+
+__Single node:__
+
+```bash
+sbatch \
+--gres gpu:<number of GPUs> \
+./DeepLearningExamples/single_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<number of GPUs> \
+<training_benchmark|inference_benchmark>
+```
+
+__Multi node:__
+
+```bash
+sbatch \
+--nodes <number of nodes> \
+--gres gpu:<number of GPUs per node> \
+--ntasks-per-node <number of GPUs per node> \
+./DeepLearningExamples/multi_node.sub \
+<path to .sqsh file> \
+<path to resnet> \
+<total number of GPUs> \
+<training_benchmark|inference_benchmark>
 ```
