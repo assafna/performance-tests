@@ -117,7 +117,7 @@ __Single node:__
 ```bash
 python -m torch.distributed.launch \
 --nproc_per_node <number of GPUs> \
-./examples/apex/examples/imagenet/main_amp.py -a resnet50 \
+../examples/apex/imagenet/main_amp.py -a resnet50 \
 --opt-level O1 \
 /imagenet
 ```
