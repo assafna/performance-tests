@@ -5,7 +5,7 @@
 srun --container-image $1 \
  --container-mounts $2:/imagenet \
  --no-container-entrypoint \
- sh -c \
+ /bin/bash -c \
  "python ./multiproc.py \
  --nproc_per_node $3 \
  ./launch.py \

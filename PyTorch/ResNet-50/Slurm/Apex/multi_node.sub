@@ -4,7 +4,7 @@
 srun --container-image $1 \
  --container-mounts $2:/imagenet \
  --no-container-entrypoint \
- sh -c \
+ /bin/bash -c \
  "python -m torch.distributed.launch \
  --nnodes $3 \
  --node_rank \${SLURM_NODEID} \

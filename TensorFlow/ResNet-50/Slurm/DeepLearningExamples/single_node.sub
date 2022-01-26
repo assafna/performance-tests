@@ -5,7 +5,7 @@
 srun --container-image $1 \
  --container-mounts $2:/imagenet \
  --no-container-entrypoint \
- sh -c \
+ /bin/bash -c \
  "mpiexec --allow-run-as-root \
  --oversubscribe \
  --bind-to socket \

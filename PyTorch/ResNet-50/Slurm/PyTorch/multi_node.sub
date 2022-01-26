@@ -4,7 +4,7 @@
 srun --container-image $1 \
  --container-mounts $2:/imagenet,$3:/pytorch \
  --no-container-entrypoint \
- sh -c \
+ /bin/bash -c \
  "python /pytorch/imagenet/main.py \
  -a resnet50 \
  --dist-url 'tcp://\${SLURM_SUBMIT_HOST}:$4' \
