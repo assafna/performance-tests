@@ -8,6 +8,6 @@ srun --container-image $1 \
  /bin/bash -c \
  "python -m torch.distributed.launch \
  --nproc_per_node $3 \
- ./examples/apex/imagenet/main_amp.py -a resnet50 \
+ /workspace/examples/apex/imagenet/main_amp.py -a resnet50 \
  --opt-level O1 \
  /imagenet"
